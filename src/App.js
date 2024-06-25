@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { Navbar } from "./Navbar";
-import { ButtonToggle } from "./ButtonToggle";
 import { MoviesList } from "./MoviesList";
 import { MovieItem } from "./MovieItem";
 import { MoviesSummary } from "./MoviesSummary";
 import { MovieWatchedItem } from "./MovieWatchedItem";
+import { Box } from "./Box";
 
 const tempMovieData = [
   {
@@ -56,43 +56,19 @@ const tempWatchedData = [
 export const average = (arr) =>
   arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
 
-function BoxMoviesList({children}){
-  const [isOpen1, setIsOpen1] = useState(true);
-  return (
-    <div className="box">
-        <ButtonToggle onClick={() => setIsOpen1((open) => !open)}>
-          {isOpen1 ? "–" : "+"}
-        </ButtonToggle>
-        {isOpen1 && children}
-      </div>
-  )
-}
-
-
-function BoxWatchedList({children}){
-  const [isOpen2, setIsOpen2] = useState(true);
-  return (
-    <div className="box">
-      <ButtonToggle onClick={() => setIsOpen2((open) => !open)}>
-        {isOpen2 ? "–" : "+"}
-      </ButtonToggle>
-      {isOpen2 && children}
-    </div>
-  )
-}
-
 function Main({movies}){
   const [watched, setWatched] = useState(tempWatchedData);
 
   return (
     <main className="main">
 
-        <BoxMoviesList>
+        <Box>
           <MoviesList>
             {movies?.map((movie) => <MovieItem key={movie.imdbID} movie={movie} />)}
           </MoviesList>
-        </BoxMoviesList>
-        <BoxWatchedList>
+        </Box>
+
+        <Box>
           <>
             <MoviesSummary watched={watched} />
 
@@ -100,7 +76,7 @@ function Main({movies}){
               {watched.map((movie) => <MovieWatchedItem key={movie.imdbID} movie={movie}/>)}
             </MoviesList>
           </>
-        </BoxWatchedList>
+        </Box>
         
       </main>
   )
