@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Navbar } from "./Navbar";
 import { MoviesList } from "./MoviesList";
 import { MovieItem } from "./MovieItem";
 import { MoviesSummary } from "./MoviesSummary";
 import { MovieWatchedItem } from "./MovieWatchedItem";
 import { Box } from "./Box";
+import axios from "axios";
 
 const tempMovieData = [
   {
@@ -57,7 +58,7 @@ export const average = (arr) =>
   arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
 
 function Main({movies}){
-  const [watched, setWatched] = useState(tempWatchedData);
+  const [watched, setWatched] = useState([]);
 
   return (
     <main className="main">
@@ -82,15 +83,41 @@ function Main({movies}){
   )
 }
 
+
+function Loader(){
+  return (
+    <p>Loading ...</p>
+  )
+}
+
+const apiKey = 'df071886'
+
 export default function App() {
   
-  const [movies, setMovies] = useState(tempMovieData);
+  const [movies, setMovies] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+
+  useEffect( () => {
+    const fetchData = async () => {
+      setIsLoading(true)
+      const data = await axios.get(`https://www.omdbapi.com/?apikey=${apiKey}&s=enter&y=2022`);
+      const movies = data?.data?.Search
+      setMovies(movies)
+      setIsLoading(false)
+    }
+
+    fetchData()
+    
+
+  }, [])
 
   return (
     <>
       
       <Navbar movies={movies} />
-      <Main movies={movies} />
+      {isLoading ? <Loader /> : <Main movies={movies} /> }
+      
       
     </>
   );
